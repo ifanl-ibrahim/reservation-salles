@@ -74,11 +74,13 @@ if (!$connexion) {
 </header>
 
 <main class="rev">
+    <div class="rev1">
     <?php
-        if(isset($_SESSION['login'])){
+        if(isset($_SESSION['login'])) {
             // var_dump($_SESSION['id']);
             echo "<form id= general action=# method='get'>
-            <inpute type='text' id='titre' name='titre' placeholder='Pour quel évenement ?' required><br>
+            <label for='titre'>Évenement</label><br>
+            <input type='text' id='titre' name='titre' placeholder='Pour quel évenement ?' required><br>
             <textarea id='description' name='description' placeholder='Description de lévenement' required></textarea><br>
             <input type='datetime-local' id='date1' name='date1' required><br>
             <input type='datetime-local' id='date2' name='date2' required><br>
@@ -107,6 +109,7 @@ if (!$connexion) {
             }
         }
     ?>
+    </div>
 </main>
 
 <footer>
