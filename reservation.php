@@ -82,8 +82,33 @@ if (!$connexion) {
             <label for='titre'>Évenement</label><br>
             <input type='text' id='titre' name='titre' placeholder='Pour quel évenement ?' required><br>
             <textarea id='description' name='description' placeholder='Description de lévenement' required></textarea><br>
-            <input type='datetime-local' id='date1' name='date1' required><br>
-            <input type='datetime-local' id='date2' name='date2' required><br>
+            <input type='date' name='date' id='date' class = 'datedufilm'><br>
+            <select name='heureDebut' id='debut'>
+                <option value='08'>de 08:00h</option>
+                <option value='09'>de 09:00h</option>
+                <option value='10'>de 10:00h</option>
+                <option value='11'>de 11:00h</option>
+                <option value='12'>de 12:00h</option>
+                <option value='13'>de 13:00h</option>
+                <option value='14'>de 14:00h</option>
+                <option value='15'>de 15:00h</option>
+                <option value='16'>de 16:00h</option>
+                <option value='17'>de 17:00h</option>
+                <option value='18'>de 18:00h</option>
+            </select>
+            <select name='heureFin' id='fin'>
+                <option value='09'>de 09:00h</option>
+                <option value='10'>de 10:00h</option>
+                <option value='11'>de 11:00h</option>
+                <option value='12'>de 12:00h</option>
+                <option value='13'>de 13:00h</option>
+                <option value='14'>de 14:00h</option>
+                <option value='15'>de 15:00h</option>
+                <option value='16'>de 16:00h</option>
+                <option value='17'>de 17:00h</option>
+                <option value='18'>de 18:00h</option>
+                <option value='19'>de 19:00h</option>
+            </select>
             <input type='submit' value='valider évenement' name='submit'>
             </form>";
             if(isset($_GET['submit'])){
@@ -99,12 +124,14 @@ if (!$connexion) {
 
                 $idTab = $_SESSION['id'];
                 $id = $idTab['id'];
-                $date1 = date("Y/m/d H:i:s");
-                $date2 = date("Y/m/d H:i:s");
-                $req = "INSERT INTO `reservations`(`titre`,`description`,`debut`,`fin`,`id_utilisateur`) VALUES ('$titre',$description,'$date1','$date2','$id')";
+                $date = $_POST['date'];
+                $debut = (int) $_POST['heureDebut'];
+                $fin = (int) $_POST['heureFin'];
+                $diff = $fin - $debut;
+                $req = "INSERT INTO `reservations`(`titre`, `description`, `date`, `debut`, `fin`, `id_utilisateur`) VALUES ($titre, $description, $date ,$debut , $fin, $id)";
                 var_dump($req);
                 $query = mysqli_query($connexion,$req);
-                        // header("location: livre-or.php");
+                        header("location: planning.php");
                 }
             }
         }
