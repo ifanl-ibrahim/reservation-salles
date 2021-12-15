@@ -1,6 +1,10 @@
 <?php
 session_start();
 
+if (isset($_POST['deco'])) {
+    session_unset ();
+    header("Location: connexion.php");}
+
 $connexion = mysqli_connect('localhost', 'root', '', 'reservationsalles');
 
 if (!isset($_SESSION['login'])) {
@@ -75,66 +79,29 @@ if (!$connexion) {
 
 <main class="rev">
     <div class="rev1">
-    <?php
-        if(isset($_SESSION['login'])) {
-            // var_dump($_SESSION['id']);
-            echo "<form id= general action=# method='get'>
-            <label for='titre'>Évenement</label><br>
+        <form id= 'general' action= 'reservation.php' method='POST'>
+            <label>Évenement</label><br>
             <input type='text' id='titre' name='titre' placeholder='Pour quel évenement ?' required><br>
             <textarea id='description' name='description' placeholder='Description de lévenement' required></textarea><br>
-            <input type='date' name='date' id='date' class = 'datedufilm'><br>
-            <select name='heureDebut' id='debut'>
-                <option value='08'>de 08:00h</option>
-                <option value='09'>de 09:00h</option>
-                <option value='10'>de 10:00h</option>
-                <option value='11'>de 11:00h</option>
-                <option value='12'>de 12:00h</option>
-                <option value='13'>de 13:00h</option>
-                <option value='14'>de 14:00h</option>
-                <option value='15'>de 15:00h</option>
-                <option value='16'>de 16:00h</option>
-                <option value='17'>de 17:00h</option>
-                <option value='18'>de 18:00h</option>
-            </select>
-            <select name='heureFin' id='fin'>
-                <option value='09'>de 09:00h</option>
-                <option value='10'>de 10:00h</option>
-                <option value='11'>de 11:00h</option>
-                <option value='12'>de 12:00h</option>
-                <option value='13'>de 13:00h</option>
-                <option value='14'>de 14:00h</option>
-                <option value='15'>de 15:00h</option>
-                <option value='16'>de 16:00h</option>
-                <option value='17'>de 17:00h</option>
-                <option value='18'>de 18:00h</option>
-                <option value='19'>de 19:00h</option>
-            </select>
+            <input type='datetime-local' name='heureDebut' id='date' min='YYYY-MM-DD 08:00.00' max='YYYY-MM-DD 18:00.00' required><br>
+            <input type='datetime-local' name='heureFin' id='date' min='YYYY-MM-DD 09:00.00' max='YYYY-MM-DD 19:00.00' required><br>
             <input type='submit' value='valider évenement' name='submit'>
-            </form>";
-            if(isset($_GET['submit'])){
+        </form>
 
-                foreach ($_GET as $key=>$value) {
-                    if($key=="description"){
-                        $description=$value;
-                    }
-                
-                    if($key=="titre"){
-                        $titre=$value;
-                    }
-
-                $idTab = $_SESSION['id'];
-                $id = $idTab['id'];
-                $date = $_POST['date'];
-                $debut = (int) $_POST['heureDebut'];
-                $fin = (int) $_POST['heureFin'];
-                $diff = $fin - $debut;
-                $req = "INSERT INTO `reservations`(`titre`, `description`, `date`, `debut`, `fin`, `id_utilisateur`) VALUES ($titre, $description, $date ,$debut , $fin, $id)";
-                var_dump($req);
-                $query = mysqli_query($connexion,$req);
-                        header("location: planning.php");
-                }
-            }
+    <?php
+    if(isset($_SESSION['login'])) {
+        if(isset($_POST['submit'])){
+            $id = $_SESSION['id']['id'];
+            $titre = $_POST['titre'];
+            $description = $_POST['description'];
+            $debut = date("Y-m-d h:i:s", strtotime($_POST['heureDebut']));
+            $fin = date("Y-m-d h:i:s", strtotime($_POST['heureFin']));
+            $requete="INSERT INTO `reservations`(`id`, `titre`, `description`, `debut`, `fin`, `id_utilisateur`) VALUES (NULL, '$titre', '$description', '$debut', '$fin', $id)";
+            $req = mysqli_query($connexion, $requete);           
+                header("location: planning.php");
         }
+    }
+
     ?>
     </div>
 </main>
