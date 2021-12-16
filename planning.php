@@ -113,7 +113,7 @@ if (isset($_POST['deco'])) {
             </tr>
         </thead>
         <tbody>
-            <?php echo $req ?>
+            <?php  ?>
         </tbody>
     </table>
             </div>

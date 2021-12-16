@@ -80,10 +80,10 @@ $connexion = mysqli_connect('localhost', 'root', '', 'reservationsalles');
                         echo "<h5>Posté par: ".$value."</h5>";
                     }
                     if($key==1){
-                        echo "<h5>Évenement: ".$value."</h5>";
+                        echo "<h4>Évenement: ".$value."</h4>";
                     }
                     if($key==2){
-                        echo "<h6>Description: ".$value."</h6>";
+                        echo "<h4>Description: ".$value."</h4>";
                     }
                     if($key==3){
                         echo "<h7>Pour le : ".$value."</h7>"."</br>";

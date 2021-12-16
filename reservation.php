@@ -96,12 +96,43 @@ if (!$connexion) {
             $description = $_POST['description'];
             $debut = date("Y-m-d h:i:s", strtotime($_POST['heureDebut']));
             $fin = date("Y-m-d h:i:s", strtotime($_POST['heureFin']));
-            $requete="INSERT INTO `reservations`(`id`, `titre`, `description`, `debut`, `fin`, `id_utilisateur`) VALUES (NULL, '$titre', '$description', '$debut', '$fin', $id)";
-            $req = mysqli_query($connexion, $requete);           
+            $query = "INSERT INTO `reservations`(`id`, `titre`, `description`, `debut`, `fin`, `id_utilisateur`) VALUES (NULL, '$titre', '$description', '$debut', '$fin', $id)";
+            $req = mysqli_query($connexion, $query);           
                 header("location: planning.php");
         }
     }
+    ?>
+    </div>
+    <div class="rev2">     
+    <?php
+        $requete = mysqli_query($connexion,'SELECT `titre`, `description`, `debut`, `fin` FROM `reservations`');
+        $res = mysqli_fetch_all($requete);
 
+        // var_dump($_POST['supprimer']);
+
+        echo "<table border='1'>";
+        echo '<tr>' . '<th>' . 'Titre' . '</th>';
+        echo '<th>' . 'Description' . '</th>';
+        echo '<th>' . 'Debut' . '</th>';
+        echo '<th>' . 'Fin' . '</th>' . '</tr>';
+        
+        foreach($res as $key=>$values) {
+            echo "<tr>";
+            foreach($values as $key=>$value){
+                echo "<td> $value </td>";
+            }
+            echo "</tr>";
+        }
+        echo '</table>';
+    ?>
+    </div>
+    <div class="delete">
+        <from id='general' method='POST'> <input type='submit' name='supprimer' value='supprimer'> </from>
+    <?php
+        if (isset($_POST['supprimer'])) {
+            (mysqli_query($connexion, "DELETE FROM `reservations` WHERE login"));
+            header("Refresh:2");
+        }
     ?>
     </div>
 </main>

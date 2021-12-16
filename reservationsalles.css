@@ -23,12 +23,12 @@ body{
 
 .rev{
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     margin: 10vh;}
 
 .rev1{
     display: flex;
-    justify-content: center;
     flex-direction: column;
     margin: 10vh;
     border: solid 0.5vh;
@@ -36,6 +36,10 @@ body{
     padding: 1vh;
     background: rgba(169, 169, 169, 0.616);
     text-align: center;}
+
+.delete{
+    margin: 2vh;
+}
 
 #description{
     margin: 0px;
