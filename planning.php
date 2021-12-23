@@ -1,128 +1,97 @@
 <?php
 session_start();
-$connexion = mysqli_connect('localhost', 'root', '', 'reservationsalles');
-$requete = "SELECT `titre`, `description`, `debut`, `fin`, `id_utilisateur` FROM `reservations`";
-$req = mysqli_query($connexion, $requete);
-$res = mysqli_fetch_assoc($req);
+require("classes.php");
+$user = new classes();
+$user->dbconnect();
 
-if (isset($_POST['deco'])) {
-    session_unset ();
-    header("Location: connexion.php");}
-
+if(isset($_POST['deconnexion'])){
+$user->disconnect();
+}
 ?>      
 
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="./reservationsalles.css">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reserver ici</title>
-    <link rel="shorcut icon" href="./images/logo_resto.png">
-    <link href="https : //fonts.googleapis.com/css2? family= Abril+Fatface & display=swap" rel="stylesheet">
+<html lang="fr">
+<head> 
+    <meta charset="utf-8">
+    <title>Accueil</title>
+    <link rel="stylesheet" href="reservation.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Heebo&display=swap" rel="stylesheet">
 </head>
-<body>
-
-<header>
-    <nav class="nav">
-        <!-- menu pc -->
-        <ul>
-            <li><a><img id="logo-navbar" src="./images/logo_resto.png"></a></li>
-            <li><a href="./index.php">Home</a></li>
-            <?php
-                if (isset($_SESSION['login'])) {
-                    echo "<li><a href='./profil.php'>House</a></li>";
-                    echo "<li><a href='./planning.php'>Planning</a></li>";
-                    echo "<li><a href='./reservation.php'>Reserver ici</a></li>";
-                    echo "<li><a href='./reservation-form.php'>Évenement</a></li>";
-                    echo "<li><form class='deco0' action='#' method='POST'><input type='submit' name='deco' value='Déconnexion'></from></li>";
-                }
-                else {
-                    echo "<li><a href='inscription.php'>Inscription</a></li>";
-                    echo "<li><a href='connexion.php'>Connexion</a></li>";
-                    echo "<li><a href='./reservation-form.php'>Évenement</a></li>";
-                }
+<body class = "fondres">
+        <header>
+            <section class = "head">
+                <img class = "logo" src="images-salles/logons.png" alt = "Logo du cinéma">
+                <nav>
+                    <li><a href = "index.php">Accueil<a></li>
+                    <li><a href='reservation.php'>Évenement</a></li>
+                    <?php 
+                        if (isset($_SESSION['user'])) {
+                        echo "<li><a href='reservation-form.php'>Reservation</a></li>";
+                        echo "<li><a href='planning.php'>Planning</a></li>";
+                        echo "<li><a href='profil.php'>Profil</a></li>";
+                        echo "<li><form method='post'><input type = 'submit' name = 'deconnexion' value='Deconnexion' class = 'deco'></form></li>";
+                        }else{
+                        echo "<li><a href='inscription.php'>Inscription</a></li>";
+                        echo "<li><a href='connexion.php'>Connexion</a></li>";
+                         }
+                    ?>
+                </nav>
+            </section>
+        </header>
+        <main>
+            <?php 
+                if (!isset($_SESSION['user'])) {
+                    header("Refresh: 4; url=connexion.php");
+                    echo "<section class = 'messageerreur'> <div class = 'box2'><h2 class = 'hdeux'> Connecte toi pour acceder au planning</h2></div></section>";
+                    exit();}
             ?>
-        </ul>
-    </nav>
-
-    <div class="drop">
-            <!-- menu mobil  -->
-            <button class="dropbutton"><img id="logo-navbar" src="./images/logo_resto.png"></button>
-            <div class="container-button">
-                <a href="./index.php">Home</a>
-                <?php
-                if (isset($_SESSION['login'])) {
-                    echo "<a href='./profil.php'>House</a>";
-                    echo "<a href='./planning.php'>Planning</a>";
-                    echo "<a href='./reservation.php'>Reserver ici</a>";
-                    echo "<a href='./reservation-form.php'>Évenement</a>";
-                    echo "<form class='deco0' action='#' method='POST'><input type='submit' name='deco' value='Déconnexion'></from>";
-                }
-                else {
-                    echo "<a href='inscription.php'>Inscription</a>";
-                    echo "<a href='connexion.php'>Connexion</a>";
-                    echo "<a href='./reservation-form.php'>Évenement</a>";
-                }
-                ?>
-            </div>
-        </div>
-</header>
-
-<main>
-<?php 
-    if (!isset($_SESSION['login'])) {
-        header("Refresh: 2; url=connexion.php");
-        echo "<p>connecte toi.</p><br><p>Redirection...</p>";
-        exit();}
-?>
-    <section class="agenda">
-        <div>
-            <div>
-                <section class = "suivantprecedent">
+            <section class="agenda">
+                <div>
+                    <div>
+                        <section class = "suivantprecedent">
                     <form method='post'>
                         <input type="submit" name ="precedent" value="Precedent" class = 'suiv'>
                         <input type="submit" name ="suivant" value=" Suivant " class = 'suiv'>
-                            <?php
-                                if (isset($_POST['suivant'])) {
-                                    $_SESSION['plus']++;
-                                }
-                                elseif (isset($_POST['precedent'])) {
-                                    $_SESSION['plus']--;
-                                } 
-                                else $_SESSION['plus'] = 0;
-                            ?>
+                        <?php
+                        if (isset($_POST['suivant'])) {
+                                        $_SESSION['plus']++;
+                        }elseif (isset($_POST['precedent'])) {
+                            $_SESSION['plus']--;
+                         } else $_SESSION['plus'] = 0;
+                        ?>
                     </form>
-    </section>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Jours</th>
-                <th>08H - 09h</th>
-                <th>09h - 10h</th>
-                <th>10h - 11h</th>
-                <th>11h - 12h</th>
-                <th>12h - 13h</th>
-                <th>13h - 14h</th>
-                <th>14h - 15h</th>
-                <th>15h - 16h</th>
-                <th>16h - 17h</th>
-                <th>17h - 18h</th>
-                <th>18h - 19h</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php  ?>
-        </tbody>
-    </table>
-            </div>
-        </div>              
-    </section>
-</main>
-<footer>
-    <a href="https://github.com/ifanl-ibrahim/reservation-salles"><img src="./images/masterhacks_github_actualiza_politicas_eliminar_codigos_poc-removebg-preview (1).png" alt="logo"></a>
-</footer>
-
+                                </section>
+                        <table class="table1">
+                            <thead>
+                                <tr>
+                                    <th>Jours</th>
+                                    <th>08H - 09h</th>
+                                    <th>09h - 10h</th>
+                                    <th>10h - 11h</th>
+                                    <th>11h - 12h</th>
+                                    <th>12h - 13h</th>
+                                    <th>13h - 14h</th>
+                                    <th>14h - 15h</th>
+                                    <th>15h - 16h</th>
+                                    <th>16h - 17h</th>
+                                    <th>17h - 18h</th>
+                                    <th>18h - 19h</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    <?php $user->afficher($_SESSION['plus']); ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>              
+            </section>
+        </main>
+    <footer class = 'footerplanning'>
+        <section class="foot">
+            <img class = "logo2" src="images-salles/logons.png" alt = "Logo du cinéma">
+            <a href="https://github.com/ifanl-ibrahim/reservation-salles" ><img class = "logo2" src="images-salles/github.png" alt = "Logo du git"></a>
+        </section>
+    </footer>
 </body>
 </html>

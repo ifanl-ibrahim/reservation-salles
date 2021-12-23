@@ -1,112 +1,74 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="./reservationsalles.css">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion</title>
-    <link rel="shorcut icon" href="./images/logo_resto.png">
-    <link href="https : //fonts.googleapis.com/css2? family= Abril+Fatface & display=swap" rel="stylesheet">
-</head>
-<body>
+<?php
+session_start();
+require "./classes.php";
+$user = new classes();
+$user->dbconnect();
+?>
 
-<header>
-    <nav class="nav">
-        <!-- menu pc -->
-        <ul>
-            <li><a><img id="logo-navbar" src="./images/logo_resto.png"></a></li>
-            <li><a href="./index.php">Home</a></li>
-            <?php
-                if (isset($_SESSION['login'])) {
-                    echo "<li><a href='./profil.php'>House</a></li>";
-                    echo "<li><a href='./planning.php'>Planning</a></li>";
-                    echo "<li><a href='./reservation.php'>Reserver ici</a></li>";
-                    echo "<li><a href='./reservation-form.php'>Évenement</a></li>";
-                    echo "<li><form class='deco0' action='#' method='POST'><input type='submit' name='deco' value='Déconnexion'></from></li>";
-                }
-                else {
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Connexion</title>
+    <link rel="stylesheet" href="reservation.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Heebo&display=swap" rel="stylesheet">
+  </head>
+<body class = "fond2">
+    <header>
+        <section class = "head">
+            <img class = "logo" src="images-salles/logons.png" alt = "Logo du cinéma">
+            <nav>
+                <li><a href = "index.php">Accueil<a></li>
+                <li><a href='reservation.php'>Évenement</a></li>
+                <?php 
+                    if (isset($_SESSION['user'])) {
+                    echo "<li><a href='reservation-form.php'>Reservation</a></li>";
+                    echo "<li><a href='planning.php'>Planning</a></li>";
+                    echo "<li><a href='profil.php'>Profil</a></li>";
+                    echo "<li><form method='post'><input type = 'submit' name = 'deconnexion' value='Deconnexion' class = 'deco'></form></li>";
+                    }else{
                     echo "<li><a href='inscription.php'>Inscription</a></li>";
                     echo "<li><a href='connexion.php'>Connexion</a></li>";
-                    echo "<li><a href='./reservation-form.php'>Évenement</a></li>";
-                }
-            ?>
-        </ul>
-    </nav>
-
-    <div class="drop">
-            <!-- menu mobil  -->
-            <button class="dropbutton"><img id="logo-navbar" src="./images/logo_resto.png"></button>
-            <div class="container-button">
-                <a href="./index.php">Home</a>
-                <?php
-                if (isset($_SESSION['login'])) {
-                    echo "<a href='./profil.php'>House</a>";
-                    echo "<a href='./planning.php'>Planning</a>";
-                    echo "<a href='./reservation.php'>Reserver ici</a>";
-                    echo "<a href='./reservation-form.php'>Évenement</a>";
-                    echo "<form class='deco0' action='#' method='POST'><input type='submit' name='deco' value='Déconnexion'></from>";
-                }
-                else {
-                    echo "<a href='inscription.php'>Inscription</a>";
-                    echo "<a href='connexion.php'>Connexion</a>";
-                    echo "<a href='./reservation-form.php'>Évenement</a>";
-                }
+                     }
                 ?>
-            </div>
-        </div>
-</header>
-
-<main>
-    <!-- zone de connexion -->
-            
-    <form id= general action="#" method="POST">
-        <h1>Connexion</h1>
-        <input type="text" placeholder="Entrer le nom d'utilisateur" name="login" required>
-        <input type="password" placeholder="Entrer le mot de passe" name="password" required>
-        <input type="submit" id='submit' name='submit' value='LOGIN'>
-    </form>
-    <?php
-        session_start();
-
-        $connexion = mysqli_connect('localhost', 'root', '', 'reservationsalles');
-
-        if (isset($_POST['submit'])) {
-            $login = trim($_POST['login']); 
-            $password = trim($_POST['password']);
-
-            if($login !== "" && $password !== "") {
-                $req = "SELECT count(*) FROM utilisateurs WHERE login = '$login' AND password='$password'";
-                $req2 = mysqli_query($connexion,$req);
-                $res = mysqli_fetch_array($req2);
-
-                $id = "SELECT `id`FROM `utilisateurs` WHERE login = '$login' ";
-                $id2 = mysqli_query($connexion,$id);
-                $id_res = mysqli_fetch_assoc($id2);
-                $_SESSION['id'] = $id_res;
-        
-                $count = $res['count(*)'];
-            
-                if($count!=0) {
-                    $_SESSION['login'] = $login;
-
-                header("location: profil.php");
-                }
-                else  echo $erreur = "<p id='erreur'>Le login ou le mot de passe n'est pas correct !</p>";
-            }
-        }
-
-        if (isset($_SESSION['login'])) {
-            $login_session = $_SESSION['login'];
-            header ("location:index.php");
-        }
+            </nav>
+        </section>
+    </header>
+    <main> 
+        <section class = "connexion">
+        <?php 
+    
+    if (isset($_SESSION['user'])) {
+        header("Refresh: 1; url=index.php");
+        echo "<div class = 'box2'>
+        <h2 class = 'hdeux'>Tu es déjà connecté. </h2>
+              </div>";
+        exit();}
     ?>
 
-</main>
-
-<footer>
-    <a href="https://github.com/ifanl-ibrahim/reservation-salles"><img src="./images/masterhacks_github_actualiza_politicas_eliminar_codigos_poc-removebg-preview (1).png" alt="logo"></a>
-</footer>
-
+        <div class = "caseco">
+            <h3 class = "H3C">Connexion</h3>
+                <form method="post">
+                    <label for="login">ID </label>
+                    <input type="text" name="login" id="login" ><br><br>
+                    <label for="password">MDP </label>
+                    <input type="password" name="password" id="password"><br>
+                    <input type="submit" name="submit" value="Confirmer" class = "confirm">
+                    <?php
+                        if(isset($_POST['submit'])){
+                            $user->connect($_POST['login'], $_POST['password']);
+                        }
+                    ?>
+                </form>
+            </div>
+        </section>
+    </main>
+    <footer class = "footerplanning">
+        <section class = "foot">
+            <img class = "logo2" src="images-salles/logons.png" alt = "Logo du cinéma">
+            <a href="https://github.com/ifanl-ibrahim/reservation-salles" ><img class = "logo2" src="images-salles/github.png" alt = "Logo du git"></a>
+        </section>
+    </footer>
 </body>
 </html>
