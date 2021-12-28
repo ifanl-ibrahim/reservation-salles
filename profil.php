@@ -44,18 +44,18 @@ $user->dbconnect();
     <article class="info">
         <section id="bienvenue">
             <?php
-                if (!isset($_SESSION['login'])) {
+                if (!isset($_SESSION['user'])) {
                     header("Refresh: 2; url=connexion.php");
                     echo "<p>connecte toi.</p><br><p>Redirection...</p>";
                     exit();
                 }
                 
-                echo "<h3>Bienvenue sur ton profil $login</h3>";
+                echo "<h3 class='titre_user'>Bienvenue sur ton profil</h3>";
             ?>
         </section>
         <form class="profil" action="#" method="POST">
-            <p>Info</p>
             <input type="submit" name="modifier" value="modifier" class = "confirm">
+        </form>
 
                 <!-- UPDATE -->
 
@@ -64,16 +64,16 @@ $user->dbconnect();
                 //zone de modif//
 
                 if (isset($_POST['modifier'])) {
-                    $modification =    "<p id= modif>Modifier le Login <input type=\"text\" name=\"login\" value=\"newlogin\"><br>
-                                        Modifier le Mot de passe <input type=\"text\" name=\"password\" value=\"newpassword\"><br>
-                                        <input type=\"submit\" name=\"submit\" value=\"modifier\"></p><br>";
+                    echo "<form method='POST'>
+                    <input type=\"text\" name=\"login\" placeholder=\"newlogin\"><br>
+                    <input type=\"text\" name=\"password\" placeholder=\"newpassword\"><br>
+                    <input type=\"submit\" name=\"valider\" value=\"valider\"><br>
+                    </form>";
+                }
+                if (isset($_POST['valider'])) {
                     $user->update($_POST['login'], $_POST['password']);
                 }
-                else {
-                    "<p style= 'color: red'>Remplissez le formulaire.<br></p>";
-                }
             ?>
-        </form>
     </article>
     </main>
 

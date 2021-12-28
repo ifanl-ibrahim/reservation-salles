@@ -1,8 +1,9 @@
 <?php
+session_start();
 require "./classes.php";
 $user = new classes();
 $user->dbconnect();
-
+$user->block();
 ?>
 
 <!DOCTYPE html>
@@ -50,13 +51,6 @@ $user->dbconnect();
                 <input type="password" name="confirm_password" id="confirm_password" class = "marge2" >
                 <input type="submit" name="submit" value="S'inscrire !" class = "confirm" class = "marge" >
                 <?php
-                if (isset($_SESSION['user'])) {
-                    header("Refresh: 1; url=index.php");
-                    echo "<div class = 'box2'>
-                    <h2 class = 'hdeux'>Tu es déjà connecté. </h2>
-                          </div>";
-                    exit();
-                }
                     if(isset($_POST['submit'])){
                         $user->register($_POST['login'], $_POST['password'], $_POST['confirm_password']);
                     }

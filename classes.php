@@ -56,7 +56,7 @@ class classes {
 
 
 
-  ////////////////////////////////////////////////////// Fonction qui vérifie les informations en BDD pour se connecter avec le bon utilisteur 
+  ////////////////////////////////////// Fonction qui vérifie les informations en BDD pour se connecter avec le bon utilisteur 
 
 
 
@@ -103,7 +103,7 @@ class classes {
 
 
 
-  //////////////////////////////////////////////////////////////////////// Fonction pour créer une reservation qui prend en compte ... paramètres
+  /////////////////////////////////////////////// Fonction pour créer une reservation qui prend en compte ... paramètres
 
 
 
@@ -169,7 +169,7 @@ class classes {
 
 
 
-  //////////////////////////////////////////////////////////////////////////////// Fonction pour traduire les jours en FR
+  //////////////////////////////////////////////// Fonction pour traduire les jours en FR
 
 
 
@@ -184,7 +184,7 @@ class classes {
 
 
 
-  //////////////////////////////////////////////////////////////////////////////// Fonction pour afficher les reservations
+  ///////////////////////////////////////////////// Fonction pour afficher les reservations
 
 
 
@@ -216,7 +216,7 @@ class classes {
 
 
 
-  //////////////////////////////////////////////////////////////////////////////////// Fonction pour afficher les réservations de l'utiisateur connecté
+  //////////////////////////////////////////// Fonction pour afficher les réservations de l'utiisateur connecté
 
   public function resafait($_id) {
 
@@ -239,7 +239,7 @@ class classes {
 
 
 
-  /////////////////////////////////////////////////////////////////////////////////////////// Fonction pour supprimer les réservation faites par l'uitiliasteur connecté
+  /////////////////////////////////////////////// Fonction pour supprimer les réservation faites par l'uitiliasteur connecté
 
 
 
@@ -253,14 +253,14 @@ class classes {
 
 
 
-  /////////////////////////////////////////////////////////////////////////////////////////// Fonction pour Blocker les pages qui ne doivent pas etre vu 
+  //////////////////////////////////// Fonction pour Blocker les pages qui ne doivent pas etre vu 
   
   
   
-  public function block($_login_session) {
+  public function block() {
 
-  if (isset($_SESSION['login'])) {
-    $_SESSION['login'];
+  if (isset($_SESSION['user'])) {
+    $_SESSION['user'];
     header ("location:index.php");}
   }
 
@@ -271,17 +271,18 @@ class classes {
 
 
   public function update ($_login, $_password) {
-    $_login = htmlspecialchars($_login);
-    $_password = htmlspecialchars($_password);
+    $_login = ($_login);
+    $_password = ($_password);
 
     $_ancienlog = $this->_login;
     $this->_login = $_login;
     $this->_password = $_password;
     
     $link = $this->_link;
+    $req = "SELECT `login`, `password` FROM `utilisateurs`";
     $SQL = "UPDATE utilisateurs SET login='$_login', password='$_password' WHERE login ='$_ancienlog'";
     $query = $link->query($SQL);                                 
-    echo '<br>les info ont bien été changé.';
+    echo "<p style= 'color: green'>les info ont bien été changé.</p>";
   }
 
 
@@ -290,35 +291,24 @@ class classes {
 
   public function getAllInfos () {
     $link = $this->_link;
-    $SQL = "SELECT * FROM reservations";
+    $SQL = "SELECT `titre`, `description`, `debut`, `fin` FROM reservations";
     $query = $link->query($SQL);
     $resultat = $query->fetch(PDO::FETCH_ASSOC);
-
-    foreach($resultat as $key=>$values){
-      foreach($values as $key=>$value){
-          if($key==0){
-              echo "<h5>Posté par: ".$value."</h5>";
-          }
-          if($key==1){
-              echo "<h4>Évenement: ".$value."</h4>";
-          }
-          if($key==2){
-              echo "<h4>Description: ".$value."</h4>";
-          }
-          if($key==3){
-              echo "<h7>Pour le : ".$value."</h7>"."</br>";
-          }
-          if($key==4){
-              echo "<h7>Au : ".$value."</h7>"."</br>";
-              echo "<hr>";
-          }
+    
+    foreach($resultat as $key=>$value) {
+      if($key==0){
+          echo "<h5>Évenement: ".$value."</h5>";
       }
-    // return ['titre' => $this->_titre,
-    //         'description' => $this->_description,
-    //         'debut' => $this->_debut,
-    //         'fin' => $this->_fin,
-    //         'id_utilisateur' => $this->_id_utilisateur];
+      elseif($key==1){
+          echo "<h4>Description: ".$value."</h4>";
+      }
+      elseif($key==2){
+          echo "<h4>Pour le: ".$value."</h4>";
+      }
+      elseif($key==3){
+          echo "<h7>Au : ".$value."</h7>"."</br>";
+          echo "<hr>";
+      }
     }
-
   }
 }

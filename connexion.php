@@ -3,6 +3,7 @@ session_start();
 require "./classes.php";
 $user = new classes();
 $user->dbconnect();
+$user->block();
 ?>
 
 <!DOCTYPE html>
@@ -37,18 +38,8 @@ $user->dbconnect();
     </header>
     <main> 
         <section class = "connexion">
-        <?php 
-    
-    if (isset($_SESSION['user'])) {
-        header("Refresh: 1; url=index.php");
-        echo "<div class = 'box2'>
-        <h2 class = 'hdeux'>Tu es déjà connecté. </h2>
-              </div>";
-        exit();}
-    ?>
-
-        <div class = "caseco">
-            <h3 class = "H3C">Connexion</h3>
+            <div class = "caseco">
+                <h3 class = "H3C">Connexion</h3>
                 <form method="post">
                     <label for="login">ID </label>
                     <input type="text" name="login" id="login" ><br><br>

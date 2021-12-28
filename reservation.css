@@ -134,6 +134,14 @@ li {
     display: flex;
     flex-direction: row;}
 
+.affichage {
+    color: white;
+}
+
+.titre_user{
+    color:white;
+}
+
 
 
 /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////// CONNEXION **/

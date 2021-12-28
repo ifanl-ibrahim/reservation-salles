@@ -36,7 +36,7 @@ $user->dbconnect();
         </section>
     </header>
 
-<main>
+<main class="affichage">
     <?php
         $user->getAllInfos();
     ?>
