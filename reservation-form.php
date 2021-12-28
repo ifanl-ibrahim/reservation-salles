@@ -16,6 +16,7 @@ header("refresh: 1.5");
     <title>Reservation</title>
     <link rel="stylesheet" href="reservation.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="shorcut icon" href="./images-salles/avatar_ciné.png">
     <link href="https://fonts.googleapis.com/css2?family=Heebo&display=swap" rel="stylesheet">
   </head>
 <body class = "fondres2">
