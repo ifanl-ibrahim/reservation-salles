@@ -2,7 +2,6 @@
 session_start();
 require "./classes.php";
 $user = new classes();
-$user->dbconnect();
 $user->block();
 ?>
 

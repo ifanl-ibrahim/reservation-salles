@@ -2,7 +2,10 @@
 session_start();
 require "./classes.php";
 $user = new classes();
-$user->dbconnect();
+if(isset($_POST['deconnexion'])){
+    $user->disconnect();
+    }
+$login=$_SESSION['user']['login'];
 ?>
 
 <!DOCTYPE html>
@@ -38,44 +41,72 @@ $user->dbconnect();
     </header>
 
     <main>
-    <article class="titre_profil">
-        <h1 class="titre_user">My House</h1>
-    </article>
+        <article class="titre_profil">
+            <h1 class="titre_user">My House</h1> <br><br>
+        </article>
 
-    <article class="info">
-        <section id="bienvenue">
+        <article class="info">
+            <section id="bienvenue">
+                <?php
+                    if (!isset($_SESSION['user'])) {
+                        header("Refresh: 2; url=connexion.php");
+                        echo "<p>connecte toi.</p><br><p>Redirection...</p>";
+                        exit();
+                    }
+
+                    echo "<h3 class='titre_user'>Bienvenue sur ton profil $login</h3>";
+                ?>
+            </section>
+            <br><br>
+            <form class="profil" action="#" method="POST">
+                <input class="btn" type="submit" id="modifier" name="modifier" value="Modifier mes information"> <br><br>
+
+
+            <!-- UPDATE -->
+
             <?php
-                if (!isset($_SESSION['user'])) {
-                    header("Refresh: 2; url=connexion.php");
-                    echo "<p>connecte toi.</p><br><p>Redirection...</p>";
-                    exit();
-                }
-                
-                echo "<h3 class='titre_user'>Bienvenue sur ton profil</h3>";
-            ?>
-        </section>
-        <form class="profil" action="#" method="POST">
-            <input type="submit" name="modifier" value="modifier" class = "confirm">
-        </form>
 
-                <!-- UPDATE -->
-
-            <?php
-
-                //zone de modif//
+            //zone de modif//
 
                 if (isset($_POST['modifier'])) {
-                    echo "<form method='POST'>
-                    <input type=\"text\" name=\"login\" placeholder=\"newlogin\"><br>
-                    <input type=\"text\" name=\"password\" placeholder=\"newpassword\"><br>
-                    <input type=\"submit\" name=\"valider\" value=\"valider\"><br>
-                    </form>";
+                    echo "<p id= modif>Modifier le Login <input type=\"submit\" name=\"modifierlogin\" value=\"ici\"><br>
+                                    Modifier le Mot de passe <input class='btn' type=\"submit\" name=\"modifierpass\" value=\"ici\"></p><br>";
                 }
-                if (isset($_POST['valider'])) {
-                    $user->update($_POST['login'], $_POST['password']);
+
+            //modif login//
+        
+                if (isset($_POST['modifierlogin'])) {
+                    echo  
+                        "<form method=\"post\">
+                            <input type=\"text\" name=\"login\" id=\"login\" placeholder=\"nouveau login\">
+                            <input class='btn' type=\"submit\" name=\"validerlog\" value=\"valider\">
+                            </form>";
+                }
+
+                if(isset($_POST['validerlog'])) {
+                    $user -> updatelog($_POST['login']);
+                }
+
+            //modif password//
+        
+                if (isset($_POST['modifierpass'])) { 
+                    echo 
+                        "<form method=\"post\">
+                            <input type=\"text\" name=\"pass\" id=\"nom\" placeholder=\"Entrer un nouveau Password\"><br>
+                            <input class='btn' type=\"submit\" name=\"validerpass\" value=\"valider\">
+                        </form>
+                    ";
+                }
+
+                if(isset($_POST['validerpass'])) {
+                    $user -> updatepass($_POST['pass']);
                 }
             ?>
-    </article>
+                <input class="btn" type="submit" id="supprimer" name="supprimer" value="Supprimer mon compte"> <br><br>
+                    <?php $user->deleteuser($_SESSION['user']['id']); ?>
+            
+            </form>
+        </article>
     </main>
 
     <footer class = "footerplanning">

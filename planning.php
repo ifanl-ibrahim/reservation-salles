@@ -1,8 +1,7 @@
 <?php
 session_start();
 require("classes.php");
-$user = new classes();
-$user->dbconnect();
+$user = new classes($_id);
 
 if(isset($_POST['deconnexion'])){
 $user->disconnect();

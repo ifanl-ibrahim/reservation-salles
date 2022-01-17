@@ -2,7 +2,6 @@
 session_start();
 include("classes.php");
 $user = new classes();
-$user->dbconnect();
 
 if(isset($_POST['supprimer'])){
 header("refresh: 1.5");
@@ -106,6 +105,10 @@ header("refresh: 1.5");
             </div>
         </div> 
         </section>
+
+            <!-- affiche seulement les reservations du user pour pouvoir le supprimer juste apres si il le veut -->
+            <!-- (pour voir les réservations de tout les utilisateur voir page Évenement) -->
+
             <input type="submit" name="submit" value="Reserver" class = " validation ">
             <?php
             if(isset($_POST['submit'])){

@@ -12,13 +12,12 @@ class classes {
 
 
 
-  public function dbconnect() {
-
+  public function __construct()
+  {
     $conn = new PDO("mysql:host=localhost; dbname=reservationsalles", 'root', '');
     $this->_link = $conn;
-
+    
   }
-
 
 
   /////////////////////////////////////////////////////////////////// Fonction pour créer l'utilisateur en BDD
@@ -218,6 +217,8 @@ class classes {
 
   //////////////////////////////////////////// Fonction pour afficher les réservations de l'utiisateur connecté
 
+
+  
   public function resafait($_id) {
 
     $link = $this->_link;
@@ -270,45 +271,78 @@ class classes {
 
 
 
-  public function update ($_login, $_password) {
-    $_login = ($_login);
-    $_password = ($_password);
+  public function updatelog ($_login) {
+  
+    $sql = "UPDATE utilisateurs set login = :login WHERE id= :id";
+    $result = $this->_link->prepare($sql);
+    $result->bindValue(':login',$_login);
+    $result->bindValue(':id',$_SESSION['user']['id']);
 
-    $_ancienlog = $this->_login;
-    $this->_login = $_login;
-    $this->_password = $_password;
-    
+    $result->execute();
+      echo"<p style= 'color: green'>vous modifié '$_login'<br></p>";
+      header("Refresh:2");
+  }
+
+  public function updatepass ($_password) {
+    $crypt = password_hash($_password, PASSWORD_BCRYPT);
+    $sql = "UPDATE utilisateurs set password = :password WHERE id= :id";
+    $result = $this->_link->prepare($sql);
+    $result->bindValue(':password',$crypt);
+    $result->bindValue(':id',$_SESSION['user']['id']);
+
+    $result->execute();
+      echo"<p style= 'color: green'>Le mot de passe a bien été changé<br></p>";
+      header("Refresh:2");
+  }
+  
+ 
+
+  //////////////////////////////////////////// Fonction pour afficher les réservations
+
+
+
+  public function getAllInfos() {
+
     $link = $this->_link;
-    $req = "SELECT `login`, `password` FROM `utilisateurs`";
-    $SQL = "UPDATE utilisateurs SET login='$_login', password='$_password' WHERE login ='$_ancienlog'";
-    $query = $link->query($SQL);                                 
-    echo "<p style= 'color: green'>les info ont bien été changé.</p>";
+    $SQL = $link->prepare("SELECT * FROM reservations");
+    $SQL->execute();
+    echo "<table class = 'tableau' >";
+    echo '<tr>' . '<th>' . 'Titre' . '</th>';
+    echo '<th>' . 'Description' . '</th>';
+    echo '<th>' . 'Debut' . '</th>';
+    echo '<th>' . 'Fin' . '</th>' . '</tr>';
+    foreach($SQL as $key){
+     echo '<tr>' . '<td>' . $key['titre'] . '</td>';
+     echo '<td>' . $key['description'] . '</td>';
+     echo '<td>' . $key['debut'] . '</td>';
+     echo '<td>' . $key['fin'] . '</td>' . '</tr>';
+    }
+    echo '</table>';
   }
 
 
 
-  /////////////////////// getAllInfos
+  //////////////////////////////////////////// Suppression de compte
 
-  public function getAllInfos () {
+
+
+  public function deleteuser() {
+
     $link = $this->_link;
-    $SQL = "SELECT `titre`, `description`, `debut`, `fin` FROM reservations";
-    $query = $link->query($SQL);
-    $resultat = $query->fetch(PDO::FETCH_ASSOC);
-    
-    foreach($resultat as $key=>$value) {
-      if($key==0){
-          echo "<h5>Évenement: ".$value."</h5>";
-      }
-      elseif($key==1){
-          echo "<h4>Description: ".$value."</h4>";
-      }
-      elseif($key==2){
-          echo "<h4>Pour le: ".$value."</h4>";
-      }
-      elseif($key==3){
-          echo "<h7>Au : ".$value."</h7>"."</br>";
-          echo "<hr>";
-      }
+
+    if (isset($_POST['supprimer'])) {
+      echo 'supprimer votre compte ?<br>
+            <form method="post">
+            <input type="submit" name="oui" value="oui">
+            <input type="submit" name="non" value="non">
+            </form>';
+    }
+    if (isset($_POST['oui'])) {
+      $SQL = $link->prepare("DELETE FROM 'utilisateurs' WHERE login = 'login'");
+      $SQL->execute();
+      session_unset ( );
+      echo "<p style= 'color: green'>compte supprimé.</p>";
+      header("Refresh:2"); 
     }
   }
 }

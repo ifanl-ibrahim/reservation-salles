@@ -472,3 +472,33 @@ th {
     flex-direction: row;
     justify-content: center;
     margin-top: 15%;}
+
+.form_pir {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    width: fit-content;
+    margin-inline: auto;
+    margin-top: 8vh;
+}
+
+label {
+    color: honeydew;
+}
+
+#champ {
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+}
+
+#champ2 {
+    margin-top: 2vh;
+    width: fit-content;
+    margin-inline: auto;
+}
+
+.btn {
+    font-family: 'Heebo', sans-serif;
+    font-size: 15.2px;
+    cursor: pointer;
+}
